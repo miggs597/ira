@@ -1,0 +1,62 @@
+openapi: "3.0.3"
+info:
+  title: "ira API"
+  description: "ira API"
+  version: "1.0.0"
+servers:
+- url: "https://ira"
+paths:
+  /:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+  /member/{memberId}:
+    get:
+      description: ""
+      parameters:
+      - name: "memberId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /shopper-reward-status:
+    get:
+      description: ""
+      parameters:
+      - name: "code"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "No memberID provided"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
