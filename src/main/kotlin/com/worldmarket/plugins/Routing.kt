@@ -1,6 +1,8 @@
 package com.worldmarket.plugins
 
+import com.worldmarket.Message
 import com.worldmarket.dao.dao
+import com.worldmarket.getImage
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -10,7 +12,7 @@ import java.util.*
 fun Application.configureRouting() {
     routing {
         get("/") {
-            call.respondText("Hello World!")
+            call.respond("Welcome to the IRA")
         }
 
         get("/shopper-reward-status") {
