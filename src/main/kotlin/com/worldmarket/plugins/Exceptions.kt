@@ -1,5 +1,7 @@
 package com.worldmarket.plugins
 
+import com.worldmarket.Message
+import com.worldmarket.getImage
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
@@ -12,9 +14,10 @@ fun Application.configurePlugins() {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             when (cause) {
-                is IllegalArgumentException -> call.respond(
+                is IllegalArgumentException -> call.respondBytes(
+                    getImage(Message.INVALID),
+                    ContentType.Image.PNG,
                     HttpStatusCode.InternalServerError,
-                    "memberID is not properly encoded as base64"
                 )
 
                 else -> call.respond(HttpStatusCode.InternalServerError, cause.localizedMessage)

@@ -9,7 +9,7 @@ import javax.imageio.ImageIO
 import kotlin.jvm.Throws
 
 enum class Message {
-    COUNT, INCOMPLETE, POINTS
+    COUNT, INCOMPLETE, POINTS, INVALID
 }
 
 /**
@@ -27,6 +27,7 @@ fun createTextForImage(
     Message.COUNT -> "You have ${count ?: "a"} $5 SHOPPER REWARD waiting! GET REWARD >"
     Message.INCOMPLETE -> "Want a birthday surprise? COMPLETE PROFILE >"
     Message.POINTS -> "Just ${points ?: 0} more points for a $5 SHOPPER REWARD SIGN IN >"
+    Message.INVALID -> "Invalid Member ID Entered"
 }
 
 /**
@@ -44,9 +45,9 @@ fun getImage(message: Message, width: Int = 800, height: Int = 250): ByteArray {
     val g2d = image.createGraphics()
 
     g2d.font = Font("Serif", Font.BOLD, 24)
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+    g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     g2d.color = Color.BLACK
 
     val textWidth = g2d.fontMetrics.stringWidth(text)
