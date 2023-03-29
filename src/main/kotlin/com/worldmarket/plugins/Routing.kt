@@ -23,6 +23,11 @@ fun Application.configureRouting() {
             }
 
             val memberID = Base64.getDecoder().decode(encodedMemberID).decodeToString()
+            val customer = dao.readCustomer(memberID)
+
+            if (customer == null) {
+                call.respond(HttpStatusCode.NotFound)
+            }
 
             call.respond(memberID)
         }
@@ -30,7 +35,7 @@ fun Application.configureRouting() {
         get("/member/{memberId}") {
             val memberId = call.parameters["memberId"] ?: ""
 
-            call.respond(dao.readCustomer(memberId)?.firstName ?: "Nothing is here")
+            call.respond(dao.readCustomer(memberId)?.toString() ?: "Nothing is here")
         }
     }
 }

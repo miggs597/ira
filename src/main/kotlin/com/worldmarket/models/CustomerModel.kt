@@ -4,19 +4,19 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.javatime.datetime
 
-class CustomerModel(private val database: Database) {
-
+class CustomerModel {
     object Customers : IntIdTable("loyaltylab_customer") {
         val memberId = varchar("member_id", 15)
-        val firstName = varchar("first_name", 256)
-        val lastName = varchar("last_name", 256)
-        val email = varchar("email", 254)
-        val memberSince = datetime("member_since")
+        val firstName = varchar("first_name", 256).nullable()
+        val lastName = varchar("last_name", 256).nullable()
+        val email = varchar("email", 254).nullable()
+        val memberSince = datetime("member_since").nullable()
         val accountStatus = bool("account_Status")
-        val unmarketable = bool("un_marketable")
+        val unmarketable = bool("un_marketable").nullable()
         val profileCompleted = bool("profile_completed")
     }
 

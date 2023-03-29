@@ -12,6 +12,13 @@ enum class Message {
     COUNT, INCOMPLETE, POINTS
 }
 
+/**
+ * Text for the image
+ *
+ * @param message Determines what text to return
+ * @param count How many offers a member has
+ * @param points How many points a member needs until their next shopper reward
+ */
 fun createTextForImage(
     message: Message,
     count: Int? = null,
@@ -22,9 +29,16 @@ fun createTextForImage(
     Message.POINTS -> "Just ${points ?: 0} more points for a $5 SHOPPER REWARD SIGN IN >"
 }
 
+/**
+ * Renders images intended for emails.
+ *
+ * @param message Used to determine what text to build
+ * @param width of the image
+ * @param height of the image
+ * @return PNG ByteArray
+ */
 @Throws
 fun getImage(message: Message, width: Int = 800, height: Int = 250): ByteArray {
-
     val text = createTextForImage(message)
     val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     val g2d = image.createGraphics()
@@ -35,8 +49,7 @@ fun getImage(message: Message, width: Int = 800, height: Int = 250): ByteArray {
     g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     g2d.color = Color.BLACK
 
-    val fontMetrics = g2d.fontMetrics
-    val textWidth = fontMetrics.stringWidth(text)
+    val textWidth = g2d.fontMetrics.stringWidth(text)
 
     g2d.drawString(text, (width - textWidth) / 2,height / 2)
     g2d.dispose()
