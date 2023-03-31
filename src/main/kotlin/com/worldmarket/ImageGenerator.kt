@@ -1,5 +1,7 @@
 package com.worldmarket
 
+import com.worldmarket.messages.Message.*
+import com.worldmarket.messages.MessageConfig
 import java.awt.Color
 import java.awt.Font
 import java.awt.RenderingHints
@@ -8,39 +10,36 @@ import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 import kotlin.jvm.Throws
 
-enum class Message {
-    COUNT, INCOMPLETE, POINTS, INVALID
-}
-
 /**
  * Text for the image
  *
- * @param message Determines what text to return
- * @param count How many offers a member has
- * @param points How many points a member needs until their next shopper reward
+ * @param messageConfig Determines what text to return
  */
-fun createTextForImage(
-    message: Message,
-    count: Int? = null,
-    points: Int? = null
-): String = when (message) {
-    Message.COUNT -> "You have ${count ?: "a"} $5 SHOPPER REWARD waiting! GET REWARD >"
-    Message.INCOMPLETE -> "Want a birthday surprise? COMPLETE PROFILE >"
-    Message.POINTS -> "Just ${points ?: 0} more points for a $5 SHOPPER REWARD SIGN IN >"
-    Message.INVALID -> "Invalid Member ID Entered"
+private fun createTextForImage(
+    messageConfig: MessageConfig
+): String = when (messageConfig.message) {
+    COUNT -> "You have ${messageConfig.count} $5 SHOPPER REWARD[s] waiting! GET REWARD >"
+    INCOMPLETE -> "Want a birthday surprise? COMPLETE PROFILE >"
+    POINTS -> "Just ${messageConfig.points} more points for a $5 SHOPPER REWARD SIGN IN >"
+    INVALID -> "Invalid Member ID Entered"
+    NOREWARD -> "Get ${messageConfig.offer} for every ${messageConfig.pointsThreshold} earned! SIGN IN >"
 }
 
 /**
  * Renders images intended for emails.
  *
- * @param message Used to determine what text to build
+ * @param messageConfig Used to determine what text to build
  * @param width of the image
  * @param height of the image
  * @return PNG ByteArray
  */
 @Throws
-fun getImage(message: Message, width: Int = 800, height: Int = 250): ByteArray {
-    val text = createTextForImage(message)
+fun getImage(
+    messageConfig: MessageConfig,
+    width: Int = 800,
+    height: Int = 250
+): ByteArray {
+    val text = createTextForImage(messageConfig)
     val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     val g2d = image.createGraphics()
 
@@ -52,7 +51,7 @@ fun getImage(message: Message, width: Int = 800, height: Int = 250): ByteArray {
 
     val textWidth = g2d.fontMetrics.stringWidth(text)
 
-    g2d.drawString(text, (width - textWidth) / 2,height / 2)
+    g2d.drawString(text, (width - textWidth) / 2, height / 2)
     g2d.dispose()
 
     val baos = ByteArrayOutputStream()

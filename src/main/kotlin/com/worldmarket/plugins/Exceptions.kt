@@ -1,7 +1,8 @@
 package com.worldmarket.plugins
 
-import com.worldmarket.Message
+import com.worldmarket.messages.Message.*
 import com.worldmarket.getImage
+import com.worldmarket.messages.MessageConfigImpl
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
@@ -15,7 +16,7 @@ fun Application.configurePlugins() {
         exception<Throwable> { call, cause ->
             when (cause) {
                 is IllegalArgumentException -> call.respondBytes(
-                    getImage(Message.INVALID),
+                    getImage(MessageConfigImpl(message = INVALID)),
                     ContentType.Image.PNG,
                     HttpStatusCode.InternalServerError,
                 )
