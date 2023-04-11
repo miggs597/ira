@@ -6,6 +6,6 @@ import com.worldmarket.models.SpendModel.*
 
 interface DAOFacade {
     suspend fun readCustomer(memberId: String): Customer?
-    suspend fun readOffer(): OfferStatus?
     suspend fun readMemberSpend(memberId: String): MemberSpend?
+    suspend fun readActiveRewards(memberId: String, benefit: String): List<OfferStatus>
 }

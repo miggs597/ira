@@ -7,6 +7,7 @@ import java.awt.Font
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import javax.imageio.ImageIO
 import kotlin.jvm.Throws
 
@@ -33,7 +34,7 @@ private fun createTextForImage(
  * @param height of the image
  * @return PNG ByteArray
  */
-@Throws
+@Throws(IOException::class, NullPointerException::class)
 fun getImage(
     messageConfig: MessageConfig,
     width: Int = 800,
@@ -43,7 +44,7 @@ fun getImage(
     val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     val g2d = image.createGraphics()
 
-    g2d.font = Font("Serif", Font.BOLD, 24)
+    g2d.font = Font("SANS_SERIF", Font.BOLD, 24)
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
     g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON)

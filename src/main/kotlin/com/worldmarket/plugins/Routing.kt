@@ -18,10 +18,11 @@ fun Application.configureRouting() {
             val encodedMemberID = call.parameters["code"] ?: throw IllegalArgumentException()
 
             val memberID = Base64.getDecoder().decode(encodedMemberID).decodeToString()
-            val customer = dao.readCustomer(memberID)
-            val (imageByteArray, statusCode) = memberStatusImage(customer)
 
-            call.respondBytes(imageByteArray, ContentType.Image.PNG, statusCode)
+            val customer = dao.readCustomer(memberID) ?: throw IllegalArgumentException()
+            val imageByteArray = memberStatusImage(customer)
+
+            call.respondBytes(imageByteArray, ContentType.Image.PNG)
         }
     }
 }

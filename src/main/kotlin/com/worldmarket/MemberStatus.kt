@@ -4,18 +4,12 @@ import com.worldmarket.dao.dao
 import com.worldmarket.messages.Message.*
 import com.worldmarket.messages.MessageConfigImpl
 import com.worldmarket.models.CustomerModel.Customer
-import io.ktor.http.*
-import java.io.ByteArrayOutputStream
 import kotlin.jvm.Throws
 
 @Throws
-suspend fun memberStatusImage(customer: Customer?): Pair<ByteArray, HttpStatusCode> {
-    if (customer == null) {
-        throw NullPointerException()
-    }
-
+suspend fun memberStatusImage(customer: Customer): ByteArray {
     if (!customer.profileCompleted) {
-        return getImage(MessageConfigImpl(message = INCOMPLETE)) to HttpStatusCode.OK
+        return getImage(MessageConfigImpl(message = INCOMPLETE))
     }
 
     val postedPoints = dao.readMemberSpend(customer.memberId)
@@ -32,8 +26,34 @@ suspend fun memberStatusImage(customer: Customer?): Pair<ByteArray, HttpStatusCo
                 offer = offer,
                 pointsThreshold = pointsThreshold
             )
-        ) to HttpStatusCode.OK
+        )
     }
 
-    return ByteArrayOutputStream().toByteArray() to HttpStatusCode.OK
+    val activeRewards = dao.readActiveRewards(customer.memberId, offer)
+
+    if (activeRewards.isNotEmpty()) {
+        return getImage(
+            MessageConfigImpl(
+                message = COUNT,
+                count = activeRewards.size
+            )
+        )
+    }
+
+    return if (postedPoints == 0) {
+        getImage(
+            MessageConfigImpl(
+                message = NOREWARD,
+                offer = offer,
+                pointsThreshold = pointsThreshold
+            )
+        )
+    } else {
+        getImage(
+            MessageConfigImpl(
+                message = POINTS,
+                offer = offer
+            )
+        )
+    }
 }
