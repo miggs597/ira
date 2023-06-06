@@ -2,13 +2,8 @@ package com.worldmarket
 
 import com.worldmarket.messages.Message.*
 import com.worldmarket.messages.MessageConfig
-import java.awt.Color
-import java.awt.Font
-import java.awt.RenderingHints
-import java.awt.image.BufferedImage
-import java.io.ByteArrayOutputStream
+import org.jetbrains.skia.*
 import java.io.IOException
-import javax.imageio.ImageIO
 import kotlin.jvm.Throws
 
 /**
@@ -41,22 +36,28 @@ fun getImage(
     height: Int = 250
 ): ByteArray {
     val text = createTextForImage(messageConfig)
-    val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-    val g2d = image.createGraphics()
 
-    g2d.font = Font("SANS_SERIF", Font.BOLD, 24)
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
-    g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON)
-    g2d.color = Color.BLACK
+    val surface = Surface.makeRasterN32Premul(width, height)
+    val canvas = surface.canvas
 
-    val textWidth = g2d.fontMetrics.stringWidth(text)
+    val paint = Paint().apply {
+        color = Color4f(255F, 0F, 0F).toColor()
+    }
 
-    g2d.drawString(text, (width - textWidth) / 2, height / 2)
-    g2d.dispose()
+    val font = Font().apply {
+        edging = FontEdging.SUBPIXEL_ANTI_ALIAS
+        hinting = FontHinting.FULL
+        size = 60F
+    }
 
-    val baos = ByteArrayOutputStream()
-    ImageIO.write(image, "png", baos)
+    val fontMetrics = font.measureText(text, paint)
+    val x = (width - fontMetrics.width) / 2
+    val y = height / 2F
 
-    return baos.toByteArray()
+    canvas.clear(Color.WHITE)
+    canvas.drawString(text, x, y, font, paint)
+
+    val data = surface.makeImageSnapshot().encodeToData() ?: throw NullPointerException()
+
+    return data.bytes
 }
